@@ -31,66 +31,31 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
-  if (variant === 'new-release') {
-    return (
-      <Link href={`/shoe/${slug}`}>
-        <Wrapper>
-          <ImageWrapper>
-            <NewTag>Just released!</NewTag>
-            <Image alt="" src={imageSrc} />
-          </ImageWrapper>
-          <Spacer size={12} />
-          <Row>
-            <Name>{name}</Name>
-            <Price>{formatPrice(price)}</Price>
-          </Row>
-          <Row>
-            <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-          </Row>
-        </Wrapper>
-      </Link>
-    );
-  }
-  else if (variant === 'on-sale') {
-    return (
-      <Link href={`/shoe/${slug}`}>
-        <Wrapper>
-          <ImageWrapper>
-            <SaleTag>Sale</SaleTag>
-            <Image alt="" src={imageSrc} />
-          </ImageWrapper>
-          
-          <Spacer size={12} />
-          <Row>
-            <Name>{name}</Name>
-            <PriceStrike>{formatPrice(price)}</PriceStrike>
-          </Row>
-          <Row>
-            <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-            <SalePrice>{formatPrice(salePrice)}</SalePrice>
-          </Row>
-        </Wrapper>
-      </Link>
-    );
-  } else {
-    return (
-      <Link href={`/shoe/${slug}`}>
-        <Wrapper>
-          <ImageWrapper>
-            <Image alt="" src={imageSrc} />
-          </ImageWrapper>
-          <Spacer size={12} />
-          <Row>
-            <Name>{name}</Name>
-            <Price>{formatPrice(price)}</Price>
-          </Row>
-          <Row>
-            <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-          </Row>
-        </Wrapper>
-      </Link>
-    );
-  }
+  return (
+    <Link href={`/shoe/${slug}`}>
+      <Wrapper>
+        <ImageWrapper>
+          <Image alt="" src={imageSrc} />
+          { variant === 'on-sale' ? <Flag style={{'--background': COLORS.primary}}>Sale</Flag> : undefined }
+          { variant === 'new-release' ? <Flag style={{'--background': COLORS.secondary}}>Just released!</Flag> : undefined }
+        </ImageWrapper>
+        
+        <Spacer size={12} />
+        <Row>
+          <Name>{name}</Name>
+          <Price style={{
+            '--color': variant === 'on-sale' ? COLORS.gray[700] : undefined,
+            '--text-decoration': variant === 'on-sale' ? 'line-through' : undefined,
+          }}
+          >{formatPrice(price)}</Price>
+        </Row>
+        <Row>
+          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          { variant === 'on-sale' ? <SalePrice>{formatPrice(salePrice)}</SalePrice> : undefined }
+        </Row>
+      </Wrapper>
+    </Link>
+  );
 };
 
 const Link = styled.a`
@@ -125,11 +90,9 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
-
-const PriceStrike = styled.span`
-  text-decoration: line-through;
-  color: ${COLORS.gray[700]};
+const Price = styled.span`
+  text-decoration: var(--text-decoration);
+  color: var(--color);
 `;
 
 const ColorInfo = styled.p`
@@ -141,30 +104,17 @@ const SalePrice = styled.span`
   color: ${COLORS.primary};
 `;
 
-const SaleTag = styled.p`
-  position: relative;
+const Flag = styled.p`
+  position: absolute;
   z-index: 1;
   width: fit-content;
   padding: 8px;
   border-radius: 4px;
   font-weight: ${WEIGHTS.bold};
   color: ${COLORS.gray[100]};
-  background: ${COLORS.primary};
-  top: 24px;
-  right: -8px;
-`;
-
-const NewTag = styled.p`
-  position: relative;
-  z-index: 1;
-  width: fit-content;
-  padding: 8px;
-  border-radius: 4px;
-  font-weight: ${WEIGHTS.bold};
-  color: ${COLORS.gray[100]};
-  background: ${COLORS.secondary};
-  top: 24px;
-  right: -8px;
+  background: var(--background);
+  top: 12px;
+  right: -4px;
 `;
 
 export default ShoeCard;
