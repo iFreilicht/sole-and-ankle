@@ -36,18 +36,16 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
-          { variant === 'on-sale' ? <Flag style={{'--background': COLORS.primary}}>Sale</Flag> : undefined }
-          { variant === 'new-release' ? <Flag style={{'--background': COLORS.secondary}}>Just released!</Flag> : undefined }
+          { variant === 'on-sale' ? <SaleFlag>Sale</SaleFlag> : undefined }
+          { variant === 'new-release' ? <NewFlag>Just released!</NewFlag> : undefined }
         </ImageWrapper>
         
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price style={{
-            '--color': variant === 'on-sale' ? COLORS.gray[700] : undefined,
-            '--text-decoration': variant === 'on-sale' ? 'line-through' : undefined,
-          }}
-          >{formatPrice(price)}</Price>
+          { variant === 'on-sale' ?
+            <StrikePrice><s>{formatPrice(price)}</s></StrikePrice> :
+            <Price>{formatPrice(price)}</Price>}
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
@@ -90,9 +88,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span`
-  text-decoration: var(--text-decoration);
-  color: var(--color);
+const Price = styled.span``;
+
+const StrikePrice = styled(Price)`
+  color: ${COLORS.gray[700]};
 `;
 
 const ColorInfo = styled.p`
@@ -115,6 +114,14 @@ const Flag = styled.p`
   background: var(--background);
   top: 12px;
   right: -4px;
+`;
+
+const SaleFlag = styled(Flag)`
+  background: ${COLORS.primary};
+`;
+
+const NewFlag = styled(Flag)`
+  background: ${COLORS.secondary};
 `;
 
 export default ShoeCard;
